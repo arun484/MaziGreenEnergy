@@ -128,7 +128,7 @@ const Home: React.FC = () => {
             </header>
 
             <main className={`${isLoggedIn ? 'hidden' : ''}`}>
-                <section id="home" className="hero-bg text-white min-h-[70vh] md:min-h-[85vh] flex items-center justify-center" style={{ backgroundImage: "linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1509391366360-2e95-9784a276?q=80&w=2070&auto=format&fit=crop')" }}>
+                <section id="home" className="hero-bg text-white min-h-[70vh] md:min-h-[85vh] flex items-center justify-center" style={{ backgroundImage: "linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('solar-background.png')" }}>
                     <div className="container mx-auto px-6 text-center">
                         <h1 className="text-3xl md:text-5xl font-black mb-4 leading-tight">Powering a Brighter Tomorrow: Mazi Green Energy - A 2 MW Solar Initiative in India</h1>
                         <p className="text-lg md:text-xl font-light max-w-4xl mx-auto text-gray-200 mt-6">
