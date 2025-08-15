@@ -2,6 +2,8 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Choose database based on environment
 let getConnection;
@@ -420,6 +422,83 @@ router.put('/change-password', authenticateToken, [
 // Logout (client-side token removal)
 router.post('/logout', authenticateToken, (req, res) => {
   res.json({ message: 'Logout successful' });
+});
+
+// Google login
+router.post('/google-login', async (req, res) => {
+  const { token } = req.body;
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const { name, email, picture } = ticket.getPayload();
+    
+    const db = getConnection();
+    
+    // Check if user exists
+    db.get('SELECT * FROM investors WHERE email = ?', [email], async (err, user) => {
+      if (err) {
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      if (user) {
+        // User exists, log them in
+        const jwtToken = jwt.sign(
+          { id: user.id, email: user.email, role: user.role },
+          process.env.JWT_SECRET || 'local-test-secret',
+          { expiresIn: '7d' }
+        );
+        res.json({
+          message: 'Login successful',
+          investor: {
+            id: user.id,
+            email: user.email,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            investmentAmount: user.investment_amount,
+            role: user.role
+          },
+          token: jwtToken
+        });
+      } else {
+        // User doesn't exist, create a new one
+        const [firstName, ...lastName] = name.split(' ');
+        const dummyPassword = `google-login-${Date.now()}`;
+        const passwordHash = await bcrypt.hash(dummyPassword, 12);
+        db.run(
+          'INSERT INTO investors (email, password_hash, first_name, last_name, investment_amount, investment_date) VALUES (?, ?, ?, ?, ?, ?)',
+          [email, passwordHash, firstName, lastName.join(' '), 0, new Date().toISOString()],
+          function (err) {
+            if (err) {
+              return res.status(500).json({ error: 'Failed to create user' });
+            }
+            const newUserId = this.lastID;
+            const jwtToken = jwt.sign(
+              { id: newUserId, email, role: 'investor' },
+              process.env.JWT_SECRET || 'local-test-secret',
+              { expiresIn: '7d' }
+            );
+            res.status(201).json({
+              message: 'User created and logged in',
+              investor: {
+                id: newUserId,
+                email,
+                firstName,
+                lastName: lastName.join(' '),
+                investmentAmount: 0,
+                role: 'investor'
+              },
+              token: jwtToken
+            });
+          }
+        );
+      }
+    });
+  } catch (error) {
+    console.error('Google login error:', error);
+    res.status(400).json({ error: 'Invalid Google token' });
+  }
 });
 
 module.exports = router;

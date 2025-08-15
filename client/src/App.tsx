@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import PlantMonitoring from './pages/PlantMonitoring';
 import FinancialDashboard from './pages/FinancialDashboard';
 import InvestorPortal from './pages/InvestorPortal';
+import Profile from './pages/Profile';
 import Layout from './components/Layout';
 import './App.css';
 
@@ -67,6 +68,7 @@ function AppRoutes() {
           <Route path="monitoring" element={<PlantMonitoring />} />
           <Route path="financial" element={<FinancialDashboard />} />
           <Route path="investor" element={<InvestorPortal />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

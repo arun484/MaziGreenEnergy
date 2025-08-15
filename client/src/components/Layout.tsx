@@ -1,11 +1,11 @@
 import React, { ReactNode } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LogOut, Menu, X } from 'lucide-react';
+import { LogOut, Menu, X, User } from 'lucide-react';
 import { useState } from 'react';
 
 const Layout: React.FC<{ children?: ReactNode }> = ({ children }) => {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -20,6 +20,7 @@ const Layout: React.FC<{ children?: ReactNode }> = ({ children }) => {
     { name: 'Plant Monitoring', href: '/monitoring' },
     { name: 'Financial', href: '/financial' },
     { name: 'Investor Portal', href: '/investor' },
+    { name: 'Profile', href: '/profile' },
   ];
 
   return (
@@ -109,7 +110,10 @@ const Layout: React.FC<{ children?: ReactNode }> = ({ children }) => {
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex flex-1"></div>
             <div className="flex items-center gap-x-4 lg:gap-x-6">
-              <span className="text-sm text-gray-500">Solar Plant Monitoring</span>
+              {user && <span className="text-sm text-gray-500">Welcome, {user.firstName}!</span>}
+              <Link to="/profile" className="text-gray-500 hover:text-gray-700">
+                <User className="h-6 w-6" />
+              </Link>
             </div>
           </div>
         </div>

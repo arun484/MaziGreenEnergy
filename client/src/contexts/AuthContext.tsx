@@ -17,6 +17,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
+  loginWithGoogle: (token: string) => Promise<boolean>;
   register: (userData: RegisterData) => Promise<boolean>;
   logout: () => void;
   updateProfile: (data: Partial<User>) => Promise<boolean>;
@@ -142,11 +143,38 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  // Google Login function
+  const loginWithGoogle = async (token: string): Promise<boolean> => {
+    try {
+      setLoading(true);
+      const response = await axios.post('/api/auth/google-login', { token });
+      
+      const { token: jwtToken, investor } = response.data;
+      
+      // Store token
+      localStorage.setItem('token', jwtToken);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${jwtToken}`;
+      
+      // Set user
+      setUser(investor);
+      
+      toast.success('Login successful!');
+      return true;
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || 'Google login failed';
+      toast.error(errorMessage);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
     loading,
     login,
+    loginWithGoogle,
     register,
     logout,
     updateProfile,

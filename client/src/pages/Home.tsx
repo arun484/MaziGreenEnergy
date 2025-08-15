@@ -2,12 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Chart, TimeScale, TimeSeriesScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import 'chartjs-adapter-date-fns';
+import { useAuth } from '../contexts/AuthContext';
 
 Chart.register(TimeScale, TimeSeriesScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
 const Home: React.FC = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { isAuthenticated, logout } = useAuth();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const powerChartRef = useRef<Chart | null>(null);
@@ -65,21 +65,11 @@ const Home: React.FC = () => {
         }
     };
 
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsLoggedIn(true);
-        setIsModalOpen(false);
-    };
-
-    const handleLogout = () => {
-        setIsLoggedIn(false);
-    };
-
     useEffect(() => {
-        if (isLoggedIn) {
+        if (isAuthenticated) {
             setTimeout(setupCharts, 100);
         }
-    }, [isLoggedIn]);
+    }, [isAuthenticated]);
 
     return (
         <div className="bg-gray-900 text-gray-300">
@@ -93,18 +83,21 @@ const Home: React.FC = () => {
                         </svg>
                         <span className="text-2xl font-bold text-gray-100">Mazi Green Energy</span>
                     </a>
-                    <div className={`hidden md:flex items-center space-x-8 ${isLoggedIn ? 'hidden' : ''}`}>
-                        <a href="#home" className="text-gray-300 hover:text-green-400 transition-all duration-300">Home</a>
-                        <a href="#about" className="text-gray-300 hover:text-green-400 transition-all duration-300">About</a>
-                        <a href="#technology" className="text-gray-300 hover:text-green-400 transition-all duration-300">Technology</a>
-                        <a href="#impact" className="text-gray-300 hover:text-green-400 transition-all duration-300">Impact</a>
-                        <a href="#contact" className="text-gray-300 hover:text-green-400 transition-all duration-300">Contact</a>
-                        <button onClick={() => setIsModalOpen(true)} className="bg-green-600 text-white font-semibold px-5 py-2 rounded-lg hover:bg-green-500 transition-all duration-300 transform hover:scale-105">Login</button>
-                    </div>
-                    <div className={`hidden md:flex items-center space-x-8 ${!isLoggedIn ? 'hidden' : ''}`}>
-                        <Link to="/dashboard" className="text-gray-300 hover:text-green-400 transition-all duration-300">Dashboard</Link>
-                        <button onClick={handleLogout} className="bg-red-600 text-white font-semibold px-5 py-2 rounded-lg hover:bg-red-500 transition-all duration-300 transform hover:scale-105">Logout</button>
-                    </div>
+                    {!isAuthenticated ? (
+                        <div className="hidden md:flex items-center space-x-8">
+                            <a href="#home" className="text-gray-300 hover:text-green-400 transition-all duration-300">Home</a>
+                            <a href="#about" className="text-gray-300 hover:text-green-400 transition-all duration-300">About</a>
+                            <a href="#technology" className="text-gray-300 hover:text-green-400 transition-all duration-300">Technology</a>
+                            <a href="#impact" className="text-gray-300 hover:text-green-400 transition-all duration-300">Impact</a>
+                            <a href="#contact" className="text-gray-300 hover:text-green-400 transition-all duration-300">Contact</a>
+                            <Link to="/login" className="bg-green-600 text-white font-semibold px-5 py-2 rounded-lg hover:bg-green-500 transition-all duration-300 transform hover:scale-105">Login</Link>
+                        </div>
+                    ) : (
+                        <div className="hidden md:flex items-center space-x-8">
+                            <Link to="/dashboard" className="text-gray-300 hover:text-green-400 transition-all duration-300">Dashboard</Link>
+                            <button onClick={logout} className="bg-red-600 text-white font-semibold px-5 py-2 rounded-lg hover:bg-red-500 transition-all duration-300 transform hover:scale-105">Logout</button>
+                        </div>
+                    )}
                     <div className="md:hidden">
                         <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-gray-300 focus:outline-none">
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
@@ -112,24 +105,28 @@ const Home: React.FC = () => {
                     </div>
                 </nav>
                 <div className={`${isMobileMenuOpen ? '' : 'hidden'} md:hidden bg-gray-900 border-t border-gray-700`}>
-                    <div className={`${isLoggedIn ? 'hidden' : ''}`}>
-                        <a href="#home" className="block px-6 py-3 text-gray-300 hover:bg-gray-800">Home</a>
-                        <a href="#about" className="block px-6 py-3 text-gray-300 hover:bg-gray-800">About</a>
-                        <a href="#technology" className="block px-6 py-3 text-gray-300 hover:bg-gray-800">Technology</a>
-                        <a href="#impact" className="block px-6 py-3 text-gray-300 hover:bg-gray-800">Impact</a>
-                        <a href="#contact" className="block px-6 py-3 text-gray-300 hover:bg-gray-800">Contact</a>
-                        <a href="#" onClick={() => { setIsModalOpen(true); setIsMobileMenuOpen(false); }} className="block px-6 py-3 text-green-400 font-bold hover:bg-gray-800">Login</a>
-                    </div>
-                    <div className={`${!isLoggedIn ? 'hidden' : ''}`}>
-                        <Link to="/dashboard" className="block px-6 py-3 text-gray-300 hover:bg-gray-800">Dashboard</Link>
-                        <a href="#" onClick={handleLogout} className="block px-6 py-3 text-red-400 font-bold hover:bg-gray-800">Logout</a>
-                    </div>
+                    {!isAuthenticated ? (
+                        <div>
+                            <a href="#home" className="block px-6 py-3 text-gray-300 hover:bg-gray-800">Home</a>
+                            <a href="#about" className="block px-6 py-3 text-gray-300 hover:bg-gray-800">About</a>
+                            <a href="#technology" className="block px-6 py-3 text-gray-300 hover:bg-gray-800">Technology</a>
+                            <a href="#impact" className="block px-6 py-3 text-gray-300 hover:bg-gray-800">Impact</a>
+                            <a href="#contact" className="block px-6 py-3 text-gray-300 hover:bg-gray-800">Contact</a>
+                            <Link to="/login" className="block px-6 py-3 text-green-400 font-bold hover:bg-gray-800">Login</Link>
+                        </div>
+                    ) : (
+                        <div>
+                            <Link to="/dashboard" className="block px-6 py-3 text-gray-300 hover:bg-gray-800">Dashboard</Link>
+                            <a href="#" onClick={logout} className="block px-6 py-3 text-red-400 font-bold hover:bg-gray-800">Logout</a>
+                        </div>
+                    )}
                 </div>
             </header>
 
-            <main className={`${isLoggedIn ? 'hidden' : ''}`}>
-                <section id="home" className="hero-bg text-white min-h-[70vh] md:min-h-[85vh] flex items-center justify-center" style={{ backgroundImage: "linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('solar-background.png')" }}>
-                    <div className="container mx-auto px-6 text-center">
+            {!isAuthenticated && (
+                <main>
+                    <section id="home" className="hero-bg text-white min-h-[70vh] md:min-h-[85vh] flex items-center justify-center" style={{ backgroundImage: "linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('solar-background.png')" }}>
+                        <div className="container mx-auto px-6 text-center">
                         <h1 className="text-3xl md:text-5xl font-black mb-4 leading-tight">Powering a Brighter Tomorrow: Mazi Green Energy - A 2 MW Solar Initiative in India</h1>
                         <p className="text-lg md:text-xl font-light max-w-4xl mx-auto text-gray-200 mt-6">
                             Harnessing the sun's energy to provide clean, sustainable power and drive India's renewable energy revolution.
@@ -370,11 +367,13 @@ const Home: React.FC = () => {
                         </div>
                     </div>
                 </section>
-            </main>
+                </main>
+            )}
 
-            <div className={`${!isLoggedIn ? 'hidden' : ''} bg-gray-900`}>
-                <section id="investor-dashboard-private" className="py-24">
-                    <div className="container mx-auto px-6">
+            {isAuthenticated && (
+                <div className="bg-gray-900">
+                    <section id="investor-dashboard-private" className="py-24">
+                        <div className="container mx-auto px-6">
                         <div className="text-center mb-16">
                             <h2 className="text-4xl font-bold text-white">Investor Dashboard</h2>
                             <p className="text-lg text-gray-400 mt-4">Transparent insights into your investment and our collective impact.</p>
@@ -413,29 +412,8 @@ const Home: React.FC = () => {
                         </div>
                     </div>
                 </section>
-            </div>
-
-            <div className={`${isModalOpen ? 'flex' : 'hidden'} fixed inset-0 bg-black bg-opacity-70 z-50 justify-center items-center p-4`}>
-                <div className="bg-gray-800 rounded-lg shadow-2xl p-8 w-full max-w-md relative border border-gray-700">
-                    <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 text-gray-500 hover:text-white text-2xl">&times;</button>
-                    <h3 className="text-2xl font-bold text-center mb-6 text-white">Login</h3>
-                    <form onSubmit={handleLogin}>
-                        <div className="mb-4">
-                            <label htmlFor="email" className="block text-gray-400 mb-2">Email Address</label>
-                            <input type="email" id="email" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-gray-700 text-white border-gray-600" placeholder="you@example.com" defaultValue="test@mazigreen.com" />
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="password" className="block text-gray-400 mb-2">Password</label>
-                            <input type="password" id="password" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-gray-700 text-white border-gray-600" placeholder="••••••••" defaultValue="test123" />
-                        </div>
-                        <div className="mb-6">
-                            <label htmlFor="mfa" className="block text-gray-400 mb-2">Authentication Code (MFA)</label>
-                            <input type="text" id="mfa" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-gray-700 text-white border-gray-600" placeholder="123456" />
-                        </div>
-                        <button type="submit" className="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-500 transition-colors">Secure Login</button>
-                    </form>
                 </div>
-            </div>
+            )}
         </div>
     );
 };
