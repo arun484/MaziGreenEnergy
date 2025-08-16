@@ -29,6 +29,22 @@ This guide provides step-by-step instructions for deploying the Mazi Green Energ
 5.  **Deploy:**
     *   Click **Create Web Service**. Render will automatically build and deploy your application. Future pushes to your connected Git branch will trigger automatic redeploys.
 
+### Troubleshooting Deployment Errors
+
+If you encounter an `invalid ELF header` error related to `sqlite3`, it means the `node_modules` folder was likely committed to your Git repository. To fix this:
+
+1.  **Ensure `server/node_modules` is ignored:** Make sure you have a `server/.gitignore` file with `/node_modules` in it.
+2.  **Remove the folder from your repository:** Run the following command to remove the `node_modules` folder from your Git history:
+    ```
+    git rm -r --cached server/node_modules
+    ```
+3.  **Commit and push the changes:**
+    ```
+    git commit -m "Fix: Remove server/node_modules from tracking"
+    git push
+    ```
+4.  **Redeploy on Render:** Trigger a new deployment from your Render dashboard.
+
 ## Front-End Deployment (Netlify)
 
 1.  **Create a Netlify Account:**
@@ -50,6 +66,38 @@ This guide provides step-by-step instructions for deploying the Mazi Green Energ
 
 5.  **Deploy Your Site:**
     *   Click the "Deploy site" button to deploy your application.
+
+## Understanding Your Environment Variables
+
+Here is a breakdown of the environment variables you need to configure for deployment.
+
+### Back-End (Render)
+
+You will set these in the "Environment" section of your Web Service on Render.
+
+*   **`DATABASE_URL`**:
+    *   **Purpose**: This is the connection string for your production database.
+    *   **How to get it**: Render can create a free PostgreSQL database for you. When you create one, Render provides this URL. You can find it in your database's "Info" page on the Render dashboard.
+
+*   **`JWT_SECRET`**:
+    *   **Purpose**: This is a secret key used to sign and verify authentication tokens. It must be kept private.
+    *   **How to get it**: You must create this yourself. It should be a long, random, and unpredictable string. You can use a password generator to create a strong secret. **Do not use the default value from the example file.**
+
+*   **`GOOGLE_CLIENT_ID`**:
+    *   **Purpose**: This is your application's ID for Google OAuth 2.0, allowing users to log in with their Google account.
+    *   **How to get it**: You can get this from the Google Cloud Console where you set up your project's credentials.
+
+*   **`CLIENT_URL`**:
+    *   **Purpose**: This tells your backend which frontend URL is allowed to make requests (for CORS).
+    *   **How to get it**: This will be the URL of your deployed Netlify site (e.g., `https://your-site-name.netlify.app`).
+
+### Front-End (Netlify)
+
+You will set this in your site's "Build & deploy" > "Environment" settings on Netlify.
+
+*   **`REACT_APP_API_URL`**:
+    *   **Purpose**: This tells your React application where to send API requests.
+    *   **How to get it**: This is the URL of your deployed Render back-end service (e.g., `https://mazi-green-energy-server.onrender.com`). You can find this on your service's page in the Render dashboard.
 
 ## Accessing Your Deployed Application
 

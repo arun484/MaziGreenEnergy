@@ -220,29 +220,33 @@ router.post('/login', [
     } else {
       // SQLite
       await new Promise((resolve, reject) => {
+        console.log(`[Login Attempt] Received login request for email: ${email}`);
         db.get('SELECT * FROM investors WHERE email = ? AND is_active = 1', [email], async (err, investor) => {
           if (err) {
-            console.error('DB error:', err);
+            console.error('[Login Error] Database query failed:', err);
             reject(err);
             return;
           }
 
-          console.log('Investor found:', investor);
-
           if (!investor) {
+            console.log(`[Login Failure] No active user found for email: ${email}`);
             res.status(401).json({ error: 'Invalid credentials' });
             resolve();
             return;
           }
+
+          console.log(`[Login Info] User found for email: ${email}. Comparing passwords...`);
 
           // Verify password
           const isValidPassword = await bcrypt.compare(password, investor.password_hash);
-          console.log('Is password valid?', isValidPassword);
           if (!isValidPassword) {
+            console.log(`[Login Failure] Invalid password for email: ${email}`);
             res.status(401).json({ error: 'Invalid credentials' });
             resolve();
             return;
           }
+
+          console.log(`[Login Success] Password verified for email: ${email}. Generating token...`);
 
           // Generate JWT token
           const token = jwt.sign(

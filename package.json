@@ -4,6 +4,7 @@
   "description": "Solar Power Plant Monitoring & Financial Tracking Platform for Mazi Green Energy",
   "main": "server/index.js",
   "scripts": {
+    "setup": "./setup.sh",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && npm run dev",
     "client": "cd client && npm start",
