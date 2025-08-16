@@ -19,12 +19,36 @@ This guide provides step-by-step instructions for deploying the Mazi Green Energ
     *   **Start Command:** `node index.js`
     *   **Plan:** Select the **Free** plan.
 
+**Step 1: Create a PostgreSQL Database on Render**
+
+Before you deploy your web service, you need a production database.
+
+1.  From the Render dashboard, click **New +** and select **PostgreSQL**.
+2.  Give your database a unique name (e.g., `mazi-green-energy-db`).
+3.  Ensure the **Region** is the same as your web service for the best performance.
+4.  Select the **Free** plan.
+5.  Click **Create Database**. It will take a few minutes for the database to be ready.
+
+**Step 2: Deploy Your Web Service**
+
+Now, create the web service and link it to the new database.
+
+1.  From the Render dashboard, click **New +** and select **Web Service**.
+2.  Connect your Git repository.
+3.  Configure the service as before:
+    *   **Name:** `mazi-green-energy-server`
+    *   **Root Directory:** `server`
+    *   **Build Command:** `npm install`
+    *   **Start Command:** `node index.js`
+    *   **Plan:** Select the **Free** plan.
+
 4.  **Add Environment Variables:**
     *   Scroll down to the **Environment** section.
-    *   Add the following environment variables:
-        *   `DATABASE_URL`: The URL of your production database. (Render offers a free PostgreSQL database you can create and link).
-        *   `JWT_SECRET`: A secret key for signing JSON Web Tokens.
+    *   Click **Add Environment Group** and select the database you just created. This will automatically add the `DATABASE_URL` for you.
+    *   Click **Add Environment Variable** to add the other secrets:
+        *   `JWT_SECRET`: A long, random string you create for signing tokens.
         *   `GOOGLE_CLIENT_ID`: Your Google client ID for authentication.
+        *   `CLIENT_URL`: The URL of your deployed Netlify site (e.g., `https://your-site-name.netlify.app`).
 
 5.  **Deploy:**
     *   Click **Create Web Service**. Render will automatically build and deploy your application. Future pushes to your connected Git branch will trigger automatic redeploys.
@@ -78,9 +102,10 @@ This will trigger a new deployment that ignores any old, cached files and will c
     *   **Publish directory:** `client/build`
 
 4.  **Configure Environment Variables:**
-    *   You will need to set the following environment variable on your Netlify site:
+    *   You will need to set the following environment variables on your Netlify site:
         *   `REACT_APP_API_URL`: The URL of your deployed Render back-end.
-    *   You can set this variable in the "Environment" section of your site settings.
+        *   `REACT_APP_GOOGLE_CLIENT_ID`: Your Google Client ID.
+    *   You can set these variables in the "Environment" section of your site settings.
 
 5.  **Deploy Your Site:**
     *   Click the "Deploy site" button to deploy your application.

@@ -29,6 +29,17 @@ The local database is seeded with a sample user. Use the following credentials t
 -   **Email:** `test@mazigreen.com`
 -   **Password:** `test123`
 
+## Environment Variables
+
+For local development, you need a `.env` file in the `client` directory. It should contain the following variables:
+
+```
+REACT_APP_API_URL=http://localhost:5002
+REACT_APP_GOOGLE_CLIENT_ID=your-google-client-id-here
+```
+
+Replace `your-google-client-id-here` with the value you get from the Google Cloud Console.
+
 ## Fixing Google Login Locally
 
 If you encounter a `GSI_LOGGER` error in the browser console related to a disallowed origin, you need to authorize your local development environment in your Google Cloud project.
