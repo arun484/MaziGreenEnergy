@@ -431,12 +431,16 @@ router.post('/logout', authenticateToken, (req, res) => {
 // Google login
 router.post('/google-login', async (req, res) => {
   const { token } = req.body;
+  console.log('[Google Login] Received token:', token);
+  console.log('[Google Login] Verifying with Client ID:', process.env.GOOGLE_CLIENT_ID);
   try {
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-    const { name, email, picture } = ticket.getPayload();
+    const payload = ticket.getPayload();
+    console.log('[Google Login] Token verified successfully. Payload:', payload);
+    const { name, email, picture } = payload;
     
     const db = getConnection();
     

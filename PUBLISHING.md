@@ -142,9 +142,23 @@ You will set this in your site's "Build & deploy" > "Environment" settings on Ne
     *   **Purpose**: This tells your React application where to send API requests.
     *   **How to get it**: This is the URL of your deployed Render back-end service (e.g., `https://mazi-green-energy-server.onrender.com`). You can find this on your service's page in the Render dashboard.
 
+## Final Step: Authorizing Your Live Site with Google
+
+For Google login to work on your deployed site, you must add your Netlify URL to the list of authorized origins in your Google Cloud project.
+
+1.  **Go to the Google Cloud Console:** Navigate to [console.cloud.google.com](https://console.cloud.google.com/).
+2.  **Select your project.**
+3.  **Go to "APIs & Services" > "Credentials".**
+4.  **Find your OAuth 2.0 Client ID** and click on it to edit.
+5.  **Under "Authorized JavaScript origins", click "ADD URI".**
+6.  **Add your Netlify site's URL:** `https://warm-griffin-19aa15.netlify.app`
+7.  **Click "Save".**
+
+It may take a few minutes for the changes to take effect. Once they do, the Google login on your live site will work correctly.
+
 ## Accessing Your Deployed Application
 
 Once you have deployed your application, you can access it using the following URLs:
 
 *   **Back-End (Render):** Your Render app will be available at `https://your-app-name.onrender.com`. You will use this URL for the `REACT_APP_API_URL` environment variable in Netlify.
-*   **Front-End (Netlify):** Your Netlify site will be available at a URL like `https://random-words.netlify.app`. You can customize this URL in your Netlify site settings. This is the URL you will use to access your site in a web browser.
+*   **Front-End (Netlify):** Your Netlify site is available at `https://warm-griffin-19aa15.netlify.app`. This is the URL you will use to access your site in a web browser.
