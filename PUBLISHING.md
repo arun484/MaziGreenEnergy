@@ -156,6 +156,23 @@ For Google login to work on your deployed site, you must add your Netlify URL to
 
 It may take a few minutes for the changes to take effect. Once they do, the Google login on your live site will work correctly.
 
+### Final Troubleshooting Step: Resetting the Production Database
+
+If logins are still failing on your live site after trying everything else, it is likely that your production database is in an incomplete state. Resetting it will ensure the latest initialization script runs on a clean slate.
+
+**Warning:** This will permanently delete all data in your production database.
+
+1.  **Go to your PostgreSQL database on the Render Dashboard.**
+2.  Click the **"Settings"** tab.
+3.  Scroll to the bottom to the **"Danger Zone"**.
+4.  Click the **"Delete Database"** button and follow the confirmation prompts.
+5.  **Re-create the database** using the exact same settings as before (Name, Region, Plan).
+6.  **Go back to your Web Service settings.**
+7.  Under **"Environment"**, ensure the `DATABASE_URL` is correctly linked to the new database (you may need to re-link it).
+8.  **Trigger a new deployment** by clicking **"Manual Deploy"** > **"Deploy latest commit"**.
+
+This will force the server to start with a brand new, empty database, and the initialization script will run correctly, creating all tables and the necessary test user.
+
 ## Accessing Your Deployed Application
 
 Once you have deployed your application, you can access it using the following URLs:
