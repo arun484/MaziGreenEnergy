@@ -125,6 +125,15 @@ async function initializeDatabase() {
       ON CONFLICT DO NOTHING;
     `);
 
+    // Insert sample investor for testing
+    const bcrypt = require('bcryptjs');
+    const testPassword = await bcrypt.hash('test123', 12);
+    await client.query(`
+      INSERT INTO investors (email, password_hash, first_name, last_name, investment_amount, investment_date, role, is_active)
+      VALUES ('test@mazigreen.com', $1, 'Test', 'Investor', 50000, CURRENT_DATE, 'investor', true)
+      ON CONFLICT (email) DO NOTHING;
+    `, [testPassword]);
+
     console.log('✅ Database tables created successfully');
     
   } catch (error) {
