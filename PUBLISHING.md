@@ -29,21 +29,39 @@ This guide provides step-by-step instructions for deploying the Mazi Green Energ
 5.  **Deploy:**
     *   Click **Create Web Service**. Render will automatically build and deploy your application. Future pushes to your connected Git branch will trigger automatic redeploys.
 
-### Troubleshooting Deployment Errors
+### Troubleshooting the 'invalid ELF header' Error
 
-If you encounter an `invalid ELF header` error related to `sqlite3`, it means the `node_modules` folder was likely committed to your Git repository. To fix this:
+This error occurs when platform-specific compiled files (from `sqlite3`) are committed to your Git repository and then deployed to a different platform (Render's Linux servers). Here is the definitive process to fix it.
 
-1.  **Ensure `server/node_modules` is ignored:** Make sure you have a `server/.gitignore` file with `/node_modules` in it.
-2.  **Remove the folder from your repository:** Run the following command to remove the `node_modules` folder from your Git history:
-    ```
+**Step 1: Clean Your Git Repository**
+
+You must run these commands in your local terminal to remove the `node_modules` folder from your Git history.
+
+1.  **Remove the folder from Git's tracking:**
+    ```bash
     git rm -r --cached server/node_modules
     ```
-3.  **Commit and push the changes:**
+    *(If you get an error that the file doesn't exist, that's okay. It just means it's already untracked.)*
+
+2.  **Commit the removal:**
+    ```bash
+    git commit -m "Fix: Remove server/node_modules from Git tracking"
     ```
-    git commit -m "Fix: Remove server/node_modules from tracking"
+
+3.  **Push the changes to your repository:**
+    ```bash
     git push
     ```
-4.  **Redeploy on Render:** Trigger a new deployment from your Render dashboard.
+
+**Step 2: Clear the Build Cache and Redeploy on Render**
+
+This is the most important step. It forces Render to start from a completely clean slate.
+
+1.  **Go to your service on the Render Dashboard.**
+2.  Click the **"Manual Deploy"** button.
+3.  Select **"Clear build cache & deploy"** from the dropdown menu.
+
+This will trigger a new deployment that ignores any old, cached files and will correctly install and compile the dependencies for Render's Linux environment.
 
 ## Front-End Deployment (Netlify)
 
