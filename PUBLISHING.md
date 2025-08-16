@@ -134,7 +134,8 @@ You will set this in your site's "Build & deploy" > "Environment" settings on Ne
 
 *   **`REACT_APP_API_URL`**:
     *   **Purpose**: This tells your React application where to send API requests.
-    *   **How to get it**: This is the URL of your deployed Render back-end service (e.g., `https://mazi-green-energy-server.onrender.com`). You can find this on your service's page in the Render dashboard.
+    *   **How to get it**: This is the URL of your deployed **Web Service** on Render (it will look like `https://your-app-name.onrender.com`). You can find this at the top of your service's page in the Render dashboard.
+    *   **CRITICAL:** Do **not** use your database URL here.
 
 
 ### Final Troubleshooting Step: Resetting the Production Database
