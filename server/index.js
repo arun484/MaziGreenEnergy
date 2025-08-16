@@ -28,6 +28,15 @@ const PORT = process.env.PORT || 5002;
 
 // Security middleware
 app.use(helmet());
+
+// CORS logging middleware
+app.use((req, res, next) => {
+  const origin = req.get('origin');
+  console.log(`[CORS] Request from origin: ${origin}`);
+  console.log(`[CORS] Allowed origin: ${process.env.CLIENT_URL || 'http://localhost:3000'}`);
+  next();
+});
+
 app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:3000',
   credentials: true
