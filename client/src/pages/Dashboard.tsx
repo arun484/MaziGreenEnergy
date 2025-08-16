@@ -10,7 +10,7 @@ import {
   Zap,
   BarChart3
 } from 'lucide-react';
-import axios from 'axios';
+import api from '../api';
 import { Line, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -72,8 +72,8 @@ const Dashboard: React.FC = () => {
   const fetchDashboardData = async () => {
     try {
       const [plantResponse, financialResponse] = await Promise.all([
-        axios.get('/api/plant/stats'),
-        axios.get('/api/financial/summary')
+        api.get('/api/plant/stats'),
+        api.get('/api/financial/summary')
       ]);
 
       setPlantStats(plantResponse.data.stats);
