@@ -47,7 +47,6 @@ Now, create the web service and link it to the new database.
     *   Click **Add Environment Group** and select the database you just created. This will automatically add the `DATABASE_URL` for you.
     *   Click **Add Environment Variable** to add the other secrets:
         *   `JWT_SECRET`: A long, random string you create for signing tokens.
-        *   `GOOGLE_CLIENT_ID`: Your Google client ID for authentication.
         *   `CLIENT_URL`: The URL of your deployed Netlify site (e.g., `https://your-site-name.netlify.app`).
 
 5.  **Deploy:**
@@ -102,10 +101,9 @@ This will trigger a new deployment that ignores any old, cached files and will c
     *   **Publish directory:** `client/build`
 
 4.  **Configure Environment Variables:**
-    *   You will need to set the following environment variables on your Netlify site:
+    *   You will need to set the following environment variable on your Netlify site:
         *   `REACT_APP_API_URL`: The URL of your deployed Render back-end.
-        *   `REACT_APP_GOOGLE_CLIENT_ID`: Your Google Client ID.
-    *   You can set these variables in the "Environment" section of your site settings.
+    *   You can set this variable in the "Environment" section of your site settings.
 
 5.  **Deploy Your Site:**
     *   Click the "Deploy site" button to deploy your application.
@@ -126,10 +124,6 @@ You will set these in the "Environment" section of your Web Service on Render.
     *   **Purpose**: This is a secret key used to sign and verify authentication tokens. It must be kept private.
     *   **How to get it**: You must create this yourself. It should be a long, random, and unpredictable string. You can use a password generator to create a strong secret. **Do not use the default value from the example file.**
 
-*   **`GOOGLE_CLIENT_ID`**:
-    *   **Purpose**: This is your application's ID for Google OAuth 2.0, allowing users to log in with their Google account.
-    *   **How to get it**: You can get this from the Google Cloud Console where you set up your project's credentials.
-
 *   **`CLIENT_URL`**:
     *   **Purpose**: This tells your backend which frontend URL is allowed to make requests (for CORS).
     *   **How to get it**: This will be the URL of your deployed Netlify site (e.g., `https://your-site-name.netlify.app`).
@@ -142,19 +136,6 @@ You will set this in your site's "Build & deploy" > "Environment" settings on Ne
     *   **Purpose**: This tells your React application where to send API requests.
     *   **How to get it**: This is the URL of your deployed Render back-end service (e.g., `https://mazi-green-energy-server.onrender.com`). You can find this on your service's page in the Render dashboard.
 
-## Final Step: Authorizing Your Live Site with Google
-
-For Google login to work on your deployed site, you must add your Netlify URL to the list of authorized origins in your Google Cloud project.
-
-1.  **Go to the Google Cloud Console:** Navigate to [console.cloud.google.com](https://console.cloud.google.com/).
-2.  **Select your project.**
-3.  **Go to "APIs & Services" > "Credentials".**
-4.  **Find your OAuth 2.0 Client ID** and click on it to edit.
-5.  **Under "Authorized JavaScript origins", click "ADD URI".**
-6.  **Add your Netlify site's URL:** `https://warm-griffin-19aa15.netlify.app`
-7.  **Click "Save".**
-
-It may take a few minutes for the changes to take effect. Once they do, the Google login on your live site will work correctly.
 
 ### Final Troubleshooting Step: Resetting the Production Database
 

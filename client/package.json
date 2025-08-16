@@ -4,7 +4,6 @@
   "description": "Frontend for Mazi Green Energy Solar Plant Monitoring Platform",
   "private": true,
   "dependencies": {
-    "@react-oauth/google": "^0.12.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
