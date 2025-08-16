@@ -1,12 +1,13 @@
-const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 // Local SQLite database for testing
 const dbPath = path.join(__dirname, 'mazi_green_energy.db');
-const db = new sqlite3.Database(dbPath);
+let db;
 
 // Initialize local database tables
 async function initializeLocalDatabase() {
+  const sqlite3 = require('sqlite3').verbose();
+  const db = new sqlite3.Database(dbPath);
   return new Promise((resolve, reject) => {
     db.serialize(() => {
       // Create tables
@@ -151,17 +152,23 @@ async function initializeLocalDatabase() {
 
 // Get database connection
 function getConnection() {
+  if (!db) {
+    const sqlite3 = require('sqlite3').verbose();
+    db = new sqlite3.Database(dbPath);
+  }
   return db;
 }
 
 // Close database connection
 function closeConnection() {
-  db.close();
+  if (db) {
+    db.close();
+    db = null;
+  }
 }
 
 module.exports = {
   initializeLocalDatabase,
   getConnection,
-  closeConnection,
-  db
+  closeConnection
 };
