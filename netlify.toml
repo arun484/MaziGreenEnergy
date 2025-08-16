@@ -1,0 +1,16 @@
+# Netlify configuration file
+
+[build]
+  # This tells Netlify where to build the site from
+  base = "client"
+  # This is the build command
+  command = "npm run build"
+  # This is the directory that contains the built site
+  publish = "client/build"
+
+[[headers]]
+  # Apply these headers to all pages
+  for = "/*"
+  [headers.values]
+    # This is the crucial header that allows the Google login pop-up to work
+    Cross-Origin-Opener-Policy = "same-origin-allow-popups"
