@@ -117,7 +117,7 @@ const Home: React.FC = () => {
                     ) : (
                         <div>
                             <Link to="/dashboard" className="block px-6 py-3 text-gray-300 hover:bg-gray-800">Dashboard</Link>
-                            <a href="#" onClick={logout} className="block px-6 py-3 text-red-400 font-bold hover:bg-gray-800">Logout</a>
+                            <a href="/" onClick={logout} className="block px-6 py-3 text-red-400 font-bold hover:bg-gray-800">Logout</a>
                         </div>
                     )}
                 </div>
@@ -347,13 +347,14 @@ const Home: React.FC = () => {
                                 <div>
                                     <h3 className="text-2xl font-bold text-white mb-3">Follow Us</h3>
                                     <div className="flex space-x-4">
-                                        <a href="#" className="text-gray-400 hover:text-green-400"><i className="fab fa-twitter fa-2x"></i></a>
-                                        <a href="#" className="text-gray-400 hover:text-green-400"><i className="fab fa-linkedin-in fa-2x"></i></a>
-                                        <a href="#" className="text-gray-400 hover:text-green-400"><i className="fab fa-instagram fa-2x"></i></a>
+                                        <a href="/" className="text-gray-400 hover:text-green-400"><i className="fab fa-twitter fa-2x"></i></a>
+                                        <a href="/" className="text-gray-400 hover:text-green-400"><i className="fab fa-linkedin-in fa-2x"></i></a>
+                                        <a href="/" className="text-gray-400 hover:text-green-400"><i className="fab fa-instagram fa-2x"></i></a>
                                     </div>
                                 </div>
                                 <div className="h-64 rounded-xl overflow-hidden border border-gray-700">
                                     <iframe
+                                        title="Mazi Green Energy Location"
                                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d92437.58315365547!2d-79.75549714342426!3d43.62156193758233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x882b402be28c8a85%3A0x19447353554e7c56!2sMississauga%2C%2ON!5e0!3m2!1sen!2sca!4v1660426756306!5m2!1sen!2sca&style=dark"
                                         width="100%"
                                         height="100%"
