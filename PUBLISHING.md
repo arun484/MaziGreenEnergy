@@ -47,7 +47,7 @@ Now, create the web service and link it to the new database.
     *   Click **Add Environment Group** and select the database you just created. This will automatically add the `DATABASE_URL` for you.
     *   Click **Add Environment Variable** to add the other secrets:
         *   `JWT_SECRET`: A long, random string you create for signing tokens.
-        *   `CLIENT_URL`: The URL of your deployed Netlify site (e.g., `https://your-site-name.netlify.app`).
+        *   `CLIENT_URL`: The URL of your deployed Netlify site (e.g., `https://your-site-name.netlify.app`). **Important:** Do not include a trailing slash.
 
 5.  **Deploy:**
     *   Click **Create Web Service**. Render will automatically build and deploy your application. Future pushes to your connected Git branch will trigger automatic redeploys.
